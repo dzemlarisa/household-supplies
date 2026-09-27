@@ -6,10 +6,7 @@ from models.operations import Operation as Op
 
 
 def _load_raw(filename: str) -> list[dict]:
-    """Прочитать список словарей из JSON-файла.
-
-    Возвращает пустой список, если файла нет или JSON повреждён.
-    """
+    """Прочитать список словарей из JSON-файла."""
     if not os.path.exists(filename):
         return []
     try:

@@ -4,7 +4,7 @@ from .categories import Category, find_category_by_id
 
 
 class Stock:
-    """Домашний запас (товар)."""
+    """Домашний запас."""
 
     def __init__(
         self,
