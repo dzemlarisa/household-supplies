@@ -2,10 +2,7 @@ from datetime import date, datetime
 
 
 def input_int(prompt: str) -> int:
-    """Запросить у пользователя целое число.
-
-    При некорректном вводе запрос повторяется.
-    """
+    """Запросить у пользователя целое число."""
     while True:
         try:
             return int(input(prompt).strip())
@@ -23,10 +20,12 @@ def input_float(prompt: str) -> float:
 
 
 def input_date(prompt: str) -> date:
-    """Запросить у пользователя дату в формате ДД.ММ.ГГГГ."""
+    """Запросить дату в формате ДД.ММ.ГГГГ."""
     while True:
         try:
-            return datetime.strptime(input(prompt).strip(), "%d.%m.%Y").date()
+            return datetime.strptime(
+                input(prompt).strip(), "%d.%m.%Y"
+            ).date()
         except ValueError:
             print("Ошибка: дата должна быть в формате ДД.ММ.ГГГГ.")
 

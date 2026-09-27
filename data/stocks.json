@@ -2,28 +2,17 @@
   {
     "id": 1,
     "name": "Рис",
-    "category": "продукты",
-    "quantity": 2.0,
+    "category_id": 1,
+    "quantity": 3.0,
     "unit": "кг",
-    "min_quantity": 1.0,
     "expiry_date": "2027-01-01"
   },
   {
     "id": 2,
     "name": "Сахар",
-    "category": "продукты",
+    "category_id": 1,
     "quantity": 0.5,
     "unit": "кг",
-    "min_quantity": 1.0,
-    "expiry_date": null
-  },
-  {
-    "id": 3,
-    "name": "Средство для посуды",
-    "category": "химия",
-    "quantity": 1.0,
-    "unit": "л",
-    "min_quantity": 0.5,
     "expiry_date": null
   }
 ]
