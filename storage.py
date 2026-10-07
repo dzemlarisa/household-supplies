@@ -60,12 +60,13 @@ def save_users(filename: str, users: list[User]) -> None:
 def load_stocks(
     filename: str,
     categories: list[Category],
+    users: list[User],
 ) -> list[Stock]:
-    """Загрузить запасы, связав их с категориями."""
+    """Загрузить запасы, связав их с категориями и владельцами."""
     result: list[Stock] = []
     for d in _load_raw(filename):
         try:
-            result.append(Stock.from_data(d, categories))
+            result.append(Stock.from_data(d, categories, users))
         except ValueError as error:
             print(f"Пропущена запись запаса: {error}")
     return result

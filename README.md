@@ -230,6 +230,8 @@ python -m pytest
 
 ## Проверка качества кода
 python -m flake8
+python -m mypy .
+python -m pylint models storage.py main.py utils.py
 
 ## Git
 Исходный код проекта хранится в Git-репозитории.

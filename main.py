@@ -1,9 +1,10 @@
-from models import Category, Operation, Stock
+from models import Category, Operation, Stock, User
 from models.categories import (
     add_category,
     find_category_by_name,
     show_categories,
 )
+from models.users import find_user_by_id
 from models.operations import (
     cancel_operation,
     consume_stock,
@@ -106,25 +107,39 @@ def menu() -> None:
 def create_new_stock(
     stocks: list[Stock],
     categories: list[Category],
+    users: list[User],
 ) -> None:
     """Сценарий добавления запаса."""
+    if not users:
+        print("Сначала добавьте хотя бы одного пользователя.")
+        return
     name = input_nonempty("Название: ")
     cat_name = input_nonempty("Категория: ").lower()
     category = find_category_by_name(categories, cat_name)
     if category is None:
         print(f"Категория '{cat_name}' не найдена, создаю новую.")
         category = add_category(categories, cat_name)
+
+    print("Выберите владельца:")
+    for u in users:
+        print(f"  {u.id}: {u.name}")
+    owner_id = input_int("ID владельца: ")
+    owner = find_user_by_id(users, owner_id)
+    if owner is None:
+        print("Пользователь не найден.")
+        return
+
     quantity = input_float("Количество: ")
     unit = input_nonempty("Единица измерения (кг/шт/л): ")
-    add_stock(stocks, name, category, quantity, unit)
-    print(f"Запас «{name}» добавлен.")
+    add_stock(stocks, name, category, owner, quantity, unit)
+    print(f"Запас «{name}» добавлен пользователю {owner.name}.")
 
 
 def main() -> None:
     """Точка запуска приложения."""
     categories = load_categories(CATEGORIES_FILE)
     users = load_users(USERS_FILE)
-    stocks = load_stocks(STOCKS_FILE, categories)
+    stocks = load_stocks(STOCKS_FILE, categories, users)
     operations = load_operations(OPERATIONS_FILE, stocks)
 
     while True:
@@ -135,7 +150,7 @@ def main() -> None:
             if choice == 1:
                 show_stocks(stocks)
             elif choice == 2:
-                create_new_stock(stocks, categories)
+                create_new_stock(stocks, categories, users)
             elif choice == 3:
                 stock_id = input_int("ID запаса для удаления: ")
                 linked = [o for o in operations if o.stock.id == stock_id]
