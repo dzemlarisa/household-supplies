@@ -131,6 +131,13 @@ def cancel_operation(
     operations.remove(op)
 
 
+def find_operation_by_id(operations, operation_id):
+    for o in operations:
+        if o.id == operation_id:
+            return o
+    return None
+
+
 def get_operations_statistics(operations: list[Operation]) -> dict:
     """Сводка по операциям."""
     consumed = sum(

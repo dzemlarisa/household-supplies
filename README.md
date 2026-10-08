@@ -19,6 +19,21 @@
 * получать статистику по категориям и операциям;
 * хранить данные между запусками приложения.
 
+
+Приложение доступно в двух вариантах:
+
+* консольная версия — `python main.py`;
+* веб-версия на Django — `python manage.py runserver`.
+
+## Используемые технологии
+
+* Python 3;
+* Django 5.2 – веб-фреймворк;
+* HTML – разметка веб-страниц;
+* CSS и Bootstrap 5.3 – оформление страниц;
+* pytest – автоматизированные тесты;
+* flake8 – проверка качества кода.
+
 ## Целевая аудитория
 
 - Владельцы квартир и домов, желающие навести порядок в кладовой;
@@ -97,6 +112,19 @@
 * `__str__()` — строковое представление операции;
 * `from_data()` — создание объекта `Operation` из набора данных.
 
+## Страницы веб-интерфейса
+
+| URL | View-функция | Назначение |
+|---|---|---|
+| `/` | `homepage.views.index` | главная страница |
+| `/stocks/` | `stocks.views.stocks_list` | список запасов |
+| `/stocks/<int:stock_id>/` | `stocks.views.stock_detail` | карточка запаса |
+| `/operations/` | `operations.views.operations_list` | список операций |
+| `/operations/<int:operation_id>/` | `operations.views.operation_detail` | карточка операции |
+
+Для несуществующих ID возвращается код 404.
+Обработчик 404 — `homepage.views.page_not_found`.
+
 ## Основные операции
 
 ### Работа с категориями
@@ -151,31 +179,39 @@
 
 ## Структура проекта
 
-homestock/
-├── README.md
-├── requirements.txt
+household-supplies/
+├── manage.py
 ├── main.py
 ├── storage.py
 ├── utils.py
-│
+├── requirements.txt
+├── homestock/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+├── homepage/
+│   ├── views.py
+│   └── urls.py
+├── stocks/
+│   ├── views.py
+│   └── urls.py
+├── operations/
+│   ├── views.py
+│   └── urls.py
 ├── models/
 │   ├── __init__.py
-│   ├── categories.py
 │   ├── users.py
+│   ├── categories.py
 │   ├── stocks.py
 │   └── operations.py
-│
 ├── data/
 │   ├── categories.json
 │   ├── users.json
 │   ├── stocks.json
 │   └── operations.json
-│
 └── tests/
-    ├── test_categories.py
-    ├── test_users.py
-    ├── test_stocks.py
-    └── test_operations.py
 
 ## Назначение модулей
 ### main.py
@@ -223,7 +259,14 @@ homestock/
 pip install -r requirements.txt
 
 ## Запуск программы
+
+### Консольная версия
+
 python main.py
+
+### Веб-версия
+
+python manage.py runserver
 
 ## Запуск тестов
 python -m pytest
@@ -241,9 +284,13 @@ python -m pylint models storage.py main.py utils.py
 git status
 ```
 
+
 ## План развития
-* разработка веб-приложения;
+
+* перенос сущностей `User`, `Category`, `Stock`, `Operation` в Django ORM;
 * подключение базы данных;
-* разработка API;
-* контейнеризация приложения;
-* настройка CI/CD.
+* переход на шаблоны (`templates/base.html`) и `render()`;
+* формы создания и редактирования запасов;
+* регистрация и вход пользователей;
+* API;
+* контейнеризация.
