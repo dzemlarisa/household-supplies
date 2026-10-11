@@ -1,8 +1,7 @@
 import json
 import os
 
-from models import Category, Operation, Stock, User
-from models.operations import Operation as Op
+from models import Category, Stock, User
 
 
 def _load_raw(filename: str) -> list[dict]:
@@ -75,22 +74,3 @@ def load_stocks(
 def save_stocks(filename: str, stocks: list[Stock]) -> None:
     """Сохранить запасы."""
     _save_raw(filename, [s.to_data() for s in stocks])
-
-
-def load_operations(
-    filename: str,
-    stocks: list[Stock],
-) -> list[Operation]:
-    """Загрузить операции, связав их с запасами."""
-    result: list[Operation] = []
-    for d in _load_raw(filename):
-        try:
-            result.append(Op.from_data(d, stocks))
-        except ValueError as error:
-            print(f"Пропущена запись операции: {error}")
-    return result
-
-
-def save_operations(filename: str, operations: list[Operation]) -> None:
-    """Сохранить операции."""
-    _save_raw(filename, [o.to_data() for o in operations])

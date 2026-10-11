@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "homepage",
     "stocks",
-    "operations",
 ]
 
 MIDDLEWARE = [

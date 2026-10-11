@@ -22,7 +22,6 @@ def page(title: str, content: str) -> str:
     <a class="navbar-brand" href="/">HomeStock</a>
     <div class="navbar-nav">
       <a class="nav-link" href="/stocks/">Запасы</a>
-      <a class="nav-link" href="/operations/">Операции</a>
     </div>
   </div>
 </nav>
@@ -36,11 +35,10 @@ def page(title: str, content: str) -> str:
 def index(request: HttpRequest) -> HttpResponse:
     """Главная страница."""
     content = """
-<h1 class="display-4">HomeStock</h1>
+<h1 class="display-4">Household-supplies</h1>
 <p class="lead">Система контроля домашних запасов.</p>
 <p>Основные разделы:</p>
 <a href="/stocks/" class="btn btn-primary me-2">Запасы</a>
-<a href="/operations/" class="btn btn-secondary">Операции</a>
 """
     return HttpResponse(page("HomeStock", content))
 

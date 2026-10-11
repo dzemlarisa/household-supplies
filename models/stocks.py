@@ -5,6 +5,7 @@ from .users import User, find_user_by_id
 
 
 class Stock:
+    """Домашний запас."""
 
     def __init__(
         self,
@@ -33,13 +34,6 @@ class Stock:
             f"owner='{self.owner.name}', "
             f"quantity={self.quantity} {self.unit})"
         )
-
-    def change_quantity(self, delta: float) -> None:
-        """Изменить количество запаса на delta."""
-        new_quantity = round(self.quantity + delta, 2)
-        if new_quantity < 0:
-            raise ValueError("Количество не может быть отрицательным.")
-        self.quantity = new_quantity
 
     @classmethod
     def from_data(
@@ -102,14 +96,6 @@ def add_stock(
     return stock
 
 
-def find_stock_by_owner(
-    stocks: list[Stock],
-    owner: User,
-) -> list[Stock]:
-    """Отобрать запасы конкретного пользователя."""
-    return [s for s in stocks if s.owner.id == owner.id]
-
-
 def find_stock(stocks: list[Stock], query: str) -> list[Stock]:
     """Найти запасы по подстроке в названии."""
     q = query.lower()
@@ -135,11 +121,6 @@ def filter_stocks_by_category(
 def sort_stocks_by_name(stocks: list[Stock]) -> list[Stock]:
     """Отсортировать запасы по названию."""
     return sorted(stocks, key=lambda s: s.name.lower())
-
-
-def sort_stocks_by_quantity(stocks: list[Stock]) -> list[Stock]:
-    """Отсортировать запасы по количеству."""
-    return sorted(stocks, key=lambda s: s.quantity)
 
 
 def delete_stock(stocks: list[Stock], stock_id: int) -> Stock:
