@@ -23,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%pe!o*_8s=0$&gif+-y)z_23sl(3sh%2m9$bgx#7zdkngkcfo9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 
-# Application definition
+# Регистрация приложений
+"""Если приложение не зарегистрировано Django не увидит его models.py (миграции не создадутся);"""
 
 INSTALLED_APPS = [
     'django.contrib.admin',
