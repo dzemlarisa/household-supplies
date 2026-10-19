@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — HomeStock{% endblock %}
+
+{% block content %}
+    <h1 class="display-4">HomeStock</h1>
+    <p class="lead">Система контроля домашних запасов.</p>
+    <p>Основные разделы:</p>
+    <a href="{% url 'stocks:list' %}" class="btn btn-primary">Запасы</a>
+    <a href="{% url 'users:list' %}" class="btn btn-primary">Владельцы</a>
+
+{% endblock %}

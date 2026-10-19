@@ -148,33 +148,69 @@
 
 household-supplies/
 ├── manage.py
-├── main.py
-├── storage.py
-├── utils.py
-├── requirements.txt
-├── homestock/
+├── main.py 
+├── storage.py   
+├── utils.py  
+├── requirements.txt  
+├── README.md  
+│
+├── homestock/  
 │   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
+│   ├── settings.py   
+│   ├── urls.py  
 │   ├── asgi.py
 │   └── wsgi.py
-├── homepage/
-│   ├── views.py
-│   └── urls.py
-├── stocks/
-│   ├── views.py
-│   └── urls.py
-├── models/
+│
+├── homepage/   
+│   ├── templates/
+│   │   └── homepage/
+│   │       └── index.html
+│   ├── static/
+│   │   └── homepage/
+│   │       ├── css/
+│   │       │   └── style.css 
+│   │       └── js/
+│   │           └── main.js  
+│   ├── views.py 
+│   └── urls.py  
+│
+├── stocks/          
+│   ├── templates/
+│   │   └── stocks/
+│   │       ├── includes/
+│   │       │   └── stock_card.html 
+│   │       ├── stock_list.html    
+│   │       └── stock_detail.html  
+│   ├── views.py  
+│   └── urls.py  
+│
+├── users/    
+│   ├── templates/
+│   │   └── users/
+│   │       ├── user_list.html 
+│   │       └── user_detail.html 
+│   ├── views.py  
+│   └── urls.py   
+│
+├── templates/  
+│   ├── base.html 
+│   ├── 404.html    
+│   └── includes/
+│       └── navigation.html 
+│
+├── models/  
 │   ├── __init__.py
-│   ├── users.py
-│   ├── categories.py
-│   └── stocks.py
-│   
+│   ├── users.py    
+│   ├── categories.py 
+│   └── stocks.py 
+│
 ├── data/
-│   ├── categories.json
 │   ├── users.json
+│   ├── categories.json
 │   └── stocks.json
+│
 └── tests/
+
 
 ## Назначение модулей
 ### main.py
@@ -244,12 +280,18 @@ python -m pylint models storage.py main.py utils.py
 git status
 ```
 
-## План развития
+## Веб-интерфейс и шаблоны
 
-* перенос сущностей `User`, `Category`, `Stock` в Django ORM;
-* подключение базы данных;
-* переход на шаблоны (`templates/base.html`) и `render()`;
-* формы создания и редактирования запасов;
-* регистрация и вход пользователей;
-* API;
-* контейнеризация.
+Веб-интерфейс построен на Django Template Language (DTL).
+- Общий каркас вынесен в `templates/base.html`.
+- Навигация вынесена в `templates/includes/navigation.html`.
+- Для вывода списков используется цикл `{% for %}`, для проверки данных — `{% if %}`.
+- Ссылки формируются через именованные маршруты `{% url %}`.
+- Карточка запаса вынесена в `stocks/includes/stock_card.html`.
+- В шаблонах используются фильтры: `|length`, `|default`, `|date`.
+
+Собственные статические файлы:
+- `homepage/static/homepage/css/style.css` (оформление карточек).
+- `homepage/static/homepage/js/main.js` (вывод текущего года).
+
+Функция `page()` полностью удалена. HTML-код в Python больше не формируется.

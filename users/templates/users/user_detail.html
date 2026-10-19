@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if user_obj %}{{ user_obj.name }} — HomeStock{% else %}Пользователь не найден — HomeStock{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user_obj %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title">{{ user_obj.name }}</h1>
+                <p class="card-text"><strong>Email:</strong> {{ user_obj.email }}</p>
+                <p class="card-text"><strong>ID:</strong> {{ user_obj.id }}</p>
+            </div>
+        </div>
+
+        <h3>Запасы пользователя</h3>
+        {% if user_stocks %}
+            <div class="list-group">
+                {% for stock in user_stocks %}
+                    <a href="{% url 'stocks:detail' stock.id %}" class="list-group-item list-group-item-action">
+                        {{ stock.name }} — {{ stock.quantity }} {{ stock.unit }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">У пользователя пока нет запасов.</p>
+        {% endif %}
+    {% else %}
+        <h1 class="text-danger">Пользователь не найден</h1>
+        <p>Пользователь с указанным идентификатором отсутствует.</p>
+    {% endif %}
+
+    <a href="{% url 'users:list' %}" class="btn btn-outline-secondary mt-4">← к списку владельцев</a>
+{% endblock %}

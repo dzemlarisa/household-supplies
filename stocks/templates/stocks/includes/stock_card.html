@@ -1,0 +1,13 @@
+<article class="card mb-3 stock-card">
+    <div class="card-body">
+        <h5 class="card-title">
+            {{ stock.name|default:"Без названия" }}
+        </h5>
+        <p class="card-text text-muted">
+            {{ stock.category.name }}
+        </p>
+        <a href="{% url 'stocks:detail' stock.id %}" class="btn btn-sm btn-outline-primary">
+            Подробнее
+        </a>
+    </div>
+</article>

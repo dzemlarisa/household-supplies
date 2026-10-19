@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if stock %}{{ stock.name }} — HomeStock{% else %}Запас не найден — HomeStock{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if stock %}
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ stock.name }}</h1>
+                <p class="card-text"><strong>Категория:</strong> {{ stock.category.name }}</p>
+                <p class="card-text">
+                    <strong>Владелец:</strong> 
+                    {% if stock.owner %}
+                        <a href="{% url 'users:detail' stock.owner.id %}">{{ stock.owner.name }}</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </p>
+                <p class="card-text"><strong>Количество:</strong> {{ stock.quantity }} {{ stock.unit }}</p>
+                <p class="card-text"><strong>Срок годности:</strong> 
+                    {% if stock.expiry_date %}
+                        {{ stock.expiry_date|date:"d.m.Y" }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    {% else %}
+        <h1 class="text-danger">Запас не найден</h1>
+        <p>Запас с указанным идентификатором отсутствует.</p>
+    {% endif %}
+
+    <a href="{% url 'stocks:list' %}" class="btn btn-outline-secondary mt-3">← к списку запасов</a>
+{% endblock %}

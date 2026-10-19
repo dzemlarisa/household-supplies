@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Запасы — HomeStock{% endblock %}
+
+{% block content %}
+    <h1>Запасы</h1>
+    <p class="text-muted">Всего запасов: {{ stocks|length }}</p>
+
+    <div class="row">
+        {% for stock in stocks %}
+            {% include "stocks/includes/stock_card.html" %}
+        {% empty %}
+            <p>Список запасов пуст.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

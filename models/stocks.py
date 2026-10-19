@@ -132,6 +132,10 @@ def delete_stock(stocks: list[Stock], stock_id: int) -> Stock:
     return stock
 
 
+def find_stock_by_owner(stocks, owner):
+    return [s for s in stocks if s.owner.id == owner.id]
+
+
 def get_statistics(stocks: list[Stock]) -> dict:
     """Сводная статистика по запасам."""
     by_category: dict[str, int] = {}
