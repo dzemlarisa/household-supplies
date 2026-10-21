@@ -9,11 +9,11 @@
         <div class="card">
             <div class="card-body">
                 <h1 class="card-title">{{ stock.name }}</h1>
-                <p class="card-text"><strong>Категория:</strong> {{ stock.category.name }}</p>
+                <p class="card-text"><strong>Категория:</strong> {{ stock.category_name }}</p>
                 <p class="card-text">
                     <strong>Владелец:</strong> 
                     {% if stock.owner %}
-                        <a href="{% url 'users:detail' stock.owner.id %}">{{ stock.owner.name }}</a>
+                        <a href="{% url 'users:detail' stock.owner.id %}">{{ stock.owner_name }}</a>
                     {% else %}
                         —
                     {% endif %}

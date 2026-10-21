@@ -1,42 +1,50 @@
+import sqlite3
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-from models.users import find_user_by_id
-from models.stocks import find_stock_by_owner
-from storage import load_categories, load_stocks, load_users
-
-CATEGORIES_FILE = "data/categories.json"
-USERS_FILE = "data/users.json"
-STOCKS_FILE = "data/stocks.json"
-
+DB_PATH = "data/homestock.sqlite"
 
 def users_list(request: HttpRequest) -> HttpResponse:
-    """Страница со списком всех владельцев."""
-    users = load_users(USERS_FILE)
-    context = {"users": users}
-    return render(request, "users/user_list.html", context)
+    """Страница /users/ (SELECT)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    users = conn.execute("SELECT id, name, email FROM users ORDER BY name;").fetchall()
+    conn.close()
+    return render(request, "users/user_list.html", {"users": users})
 
 
 def user_detail(request: HttpRequest, user_id: int) -> HttpResponse:
-    """Страница конкретного владельца и его запасов."""
-    categories = load_categories(CATEGORIES_FILE)
-    users = load_users(USERS_FILE)
-    stocks = load_stocks(STOCKS_FILE, categories, users)
+    """Страница /users/<id>/ (SELECT + WHERE)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    user = conn.execute("SELECT id, name, email FROM users WHERE id = ?;", (user_id,)).fetchone()
     
-    user_obj = find_user_by_id(users, user_id)
-    
-    user_stocks = []
-    if user_obj is not None:
-        user_stocks = find_stock_by_owner(stocks, user_obj)
+    if user is None:
+        conn.close()
+        return render(request, "users/user_detail.html", {"user_obj": None}, status=404)
 
-    context = {
-        "user_obj": user_obj,
-        "user_stocks": user_stocks,
-    }
+    user_stocks = conn.execute("""
+        SELECT stocks.id, stocks.name, stocks.quantity, stocks.unit
+        FROM stocks
+        WHERE stocks.user_id = ?;
+    """, (user_id,)).fetchall()
     
-    return render(
-        request,
-        "users/user_detail.html",
-        context,
-        status=404 if user_obj is None else 200,
-    )
+    conn.close()
+    
+    context = {"user_obj": user, "user_stocks": user_stocks}
+    return render(request, "users/user_detail.html", context)
+
+
+def statistics(request: HttpRequest) -> HttpResponse:
+    """Страница со статистикой по категориям (GROUP BY)."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    stats = conn.execute("""
+        SELECT categories.name AS category_name, COUNT(stocks.id) AS stock_count
+        FROM categories
+        LEFT JOIN stocks ON categories.id = stocks.category_id
+        GROUP BY categories.name
+        ORDER BY stock_count DESC;
+    """).fetchall()
+    conn.close()
+    return render(request, "users/statistics.html", {"stats": stats})
