@@ -1,40 +1,16 @@
-import sqlite3
-from django.http import HttpRequest, HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from stocks.models import Stock
 
-DB_PATH = "data/homestock.sqlite"
+def stocks_list(request):
+    stocks_list = Stock.objects.select_related("category", "owner").all()
 
-def stocks_list(request: HttpRequest) -> HttpResponse:
-    """Страница /stocks/ — список запасов (SQL SELECT)."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    stocks = conn.execute("""
-        SELECT stocks.id, stocks.name, stocks.quantity, stocks.unit, 
-               categories.name AS category_name
-        FROM stocks
-        JOIN categories ON stocks.category_id = categories.id
-        ORDER BY stocks.name;
-    """).fetchall()
-    conn.close()
+    paginator = Paginator(stocks_list, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, "stocks/stock_list.html", {"stocks": stocks})
+    return render(request, "stocks/stock_list.html", {"stocks": page_obj, "page_obj": page_obj})
 
-
-def stock_detail(request: HttpRequest, stock_id: int) -> HttpResponse:
-    """Страница /stocks/<id>/ (SQL SELECT + JOIN)."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    stock = conn.execute("""
-        SELECT stocks.id, stocks.name, stocks.quantity, stocks.unit, stocks.expiry_date,
-               categories.name AS category_name, users.name AS owner_name
-        FROM stocks
-        JOIN categories ON stocks.category_id = categories.id
-        JOIN users ON stocks.user_id = users.id
-        WHERE stocks.id = ?;
-    """, (stock_id,)).fetchone()
-    conn.close()
-
-    if stock is None:
-        raise Http404("Запас не найден")
-
+def stock_detail(request, stock_id):
+    stock = get_object_or_404(Stock.objects.select_related("category", "owner"), pk=stock_id)
     return render(request, "stocks/stock_detail.html", {"stock": stock})

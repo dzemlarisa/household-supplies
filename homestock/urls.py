@@ -6,6 +6,7 @@ urlpatterns = [
     path("", include("homepage.urls")),
     path("stocks/", include("stocks.urls")),
     path("users/", include("users.urls")),
+    path("categories/", include("categories.urls")),
 ]
 
 handler404 = "homepage.views.page_not_found"
